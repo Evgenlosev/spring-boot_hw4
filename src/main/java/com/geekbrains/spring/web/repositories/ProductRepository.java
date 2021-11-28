@@ -12,16 +12,16 @@ import java.util.List;
 public class ProductRepository {
     private List<Product> products;
 
-    @PostConstruct
-    public void init() {
-        products = new ArrayList<>(List.of(
-                new Product(1L, "Bread", 40L),
-                new Product(2L, "Apples", 150L),
-                new Product(3L, "Milk", 60L),
-                new Product(4L, "Chocolate", 70L),
-                new Product(5L, "Cheese", 145L)
-        ));
-    }
+//    @PostConstruct
+//    public void init() {
+//        products = new ArrayList<>(List.of(
+//                new Product(1L, "Bread", 40L),
+//                new Product(2L, "Apples", 150L),
+//                new Product(3L, "Milk", 60L),
+//                new Product(4L, "Chocolate", 70L),
+//                new Product(5L, "Cheese", 145L)
+//        ));
+//    }
 
 
 

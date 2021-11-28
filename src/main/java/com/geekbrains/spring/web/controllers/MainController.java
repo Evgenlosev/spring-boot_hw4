@@ -25,8 +25,8 @@ public class MainController {
         productService.deleteById(id);
     }
 
-    @GetMapping("/products/change_cost")
-    public void changeCost(@RequestParam Long productId, @RequestParam Integer delta) {
-        productService.changeCost(productId, delta);
+    @GetMapping("/products/change_price")
+    public void changePrice(@RequestParam Long productId, @RequestParam Integer delta) {
+        productService.changePrice(productId, delta);
     }
 }

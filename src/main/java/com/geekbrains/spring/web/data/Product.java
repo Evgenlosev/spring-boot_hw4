@@ -1,18 +1,21 @@
 package com.geekbrains.spring.web.data;
 
+import javax.persistence.*;
+
+
+@Entity
+@Table(name = "products")
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "title")
     private String title;
-    private Long cost;
 
-    public Product() {
-    }
-
-    public Product(Long id, String title, Long cost) {
-        this.id = id;
-        this.title = title;
-        this.cost = cost;
-    }
+    @Column(name = "price")
+    private Integer price;
 
     public Long getId() {
         return id;
@@ -30,11 +33,28 @@ public class Product {
         this.title = title;
     }
 
-    public Long getCost() {
-        return cost;
+    public Integer getPrice() {
+        return price;
     }
 
-    public void setCost(Long cost) {
-        this.cost = cost;
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public Product() {
+    }
+
+    public Product(String title, Integer price) {
+        this.title = title;
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", price=" + price +
+                '}';
     }
 }

@@ -16,9 +16,22 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
             });
     }
 
-    $scope.changeCost = function (productId, delta) {
+//    $scope.changeCost = function (productId, delta) {
+//        $http({
+//            url: contextPath + '/products/change_cost',
+//            method: 'GET',
+//            params: {
+//                productId: productId,
+//                delta: delta
+//            }
+//        }).then(function (response) {
+//            $scope.showProducts();
+//        });
+//    }
+
+    $scope.changePrice = function (productId, delta) {
         $http({
-            url: contextPath + '/products/change_cost',
+            url: contextPath + '/products/change_price',
             method: 'GET',
             params: {
                 productId: productId,
@@ -28,6 +41,7 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
             $scope.showProducts();
         });
     }
+
 
     $scope.showProducts();
 });

@@ -15,7 +15,16 @@
 <body>
 
 <div class="container" ng-controller="indexController">
-    <h3>Список продуктов</h3>
+    <h2>Список продуктов</h2>
+    <p>Фильтр по цене</p>
+    <form novalidate ng-submit="filterProductList(min, max)">
+        <input class="form-control" type="number" placeholder="От" ng-model="min">
+        <input class="form-control" type="number" placeholder="До" ng-model="max">
+        <p></p>
+        <button type="submit" class="btn btn-primary">Фильтровать</button>
+        <button class="btn btn-primary" ng-click="reset()">Сбросить</button>
+    </form>
+    <p></p>
     <table class="table table-hover" cellpadding="0" cellspacing="0">
         <tr>
             <td>ID</td>

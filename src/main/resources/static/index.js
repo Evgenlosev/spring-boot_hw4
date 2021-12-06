@@ -16,18 +16,6 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
             });
     }
 
-//    $scope.changeCost = function (productId, delta) {
-//        $http({
-//            url: contextPath + '/products/change_cost',
-//            method: 'GET',
-//            params: {
-//                productId: productId,
-//                delta: delta
-//            }
-//        }).then(function (response) {
-//            $scope.showProducts();
-//        });
-//    }
 
     $scope.changePrice = function (productId, delta) {
         $http({
@@ -42,6 +30,28 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
         });
     }
 
+    $scope.filterProductList = function (min, max) {
+        $http({
+            url: contextPath + '/products/price_between',
+            method: 'GET',
+            params: {
+                min: min,
+                max: max
+            }
+        }).then(function (response) {
+            $scope.ProductsList = response.data;
+        });
+    }
+
+    $scope.reset = function () {
+        $http.get(contextPath + '/products')
+            .then(function (response) {
+                $scope.min = null;
+                $scope.max = null;
+                $scope.showProducts();
+
+            });
+    };
 
     $scope.showProducts();
 });

@@ -17,6 +17,9 @@ public class Product {
     @Column(name = "price")
     private Integer price;
 
+    @Column(name = "creation_date")
+    private String creationDate;
+
     public Long getId() {
         return id;
     }
@@ -47,6 +50,14 @@ public class Product {
     public Product(String title, Integer price) {
         this.title = title;
         this.price = price;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
     }
 
     @Override

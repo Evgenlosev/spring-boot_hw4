@@ -5,6 +5,7 @@ import com.geekbrains.spring.web.entities.ProductDto;
 import com.geekbrains.spring.web.exceptions.ResourceNotFoundedException;
 import com.geekbrains.spring.web.repositories.ProductRepository;
 import com.geekbrains.spring.web.repositories.specifications.ProductsSpecifications;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -17,12 +18,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     public Page<Product> find(Integer minPrice, Integer maxPrice, String partTitle, Integer page) {
         Specification<Product> spec = Specification.where(null);
@@ -35,12 +34,9 @@ public class ProductService {
         if (partTitle != null) {
             spec = spec.and(ProductsSpecifications.titleLike(partTitle));
         }
-        return productRepository.findAll(spec, PageRequest.of(page - 1, 5));
+        return productRepository.findAll(spec, PageRequest.of(page - 1, 10));
     }
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
-    }
 
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
@@ -50,29 +46,17 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    @Transactional
-    public void changePrice(Long productId, Integer delta) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundedException("Unable to change product's price, id: " + productId));
-        product.setPrice(product.getPrice() + delta);
-    }
-
-
-    public List<Product> findByPriceBetween(Integer min, Integer max) {
-        return productRepository.findAllByPriceBetween(min, max);
-    }
-
-    public List<Product> findByPriceMore(Integer min) {
-        return productRepository.findAllByPriceMore(min);
-    }
-
-    public List<Product> findByPriceLess(Integer max) {
-        return productRepository.findAllByPriceLess(max);
-    }
-
-    public ProductDto saveAndFlush(ProductDto productDto) {
-        Product product = new Product(productDto.getTitle(), productDto.getPrice());
+    public Product save(Product product) {
         product.setCreationDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").format(new Date()));
-        return new ProductDto(productRepository.saveAndFlush(product));
+        return productRepository.save(product);
+    }
+
+    @Transactional
+    public Product update(ProductDto productDto) {
+        Product product = productRepository.findById(productDto.getId()).orElseThrow(() -> new ResourceNotFoundedException("Невозможно обновить продукт, не найден в базе, id: " + productDto.getId()));
+        product.setPrice(productDto.getPrice());
+        product.setTitle(productDto.getTitle());
+        return product;
     }
 }
 

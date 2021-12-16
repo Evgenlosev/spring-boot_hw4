@@ -29,34 +29,50 @@
     <table class="table table-hover" cellpadding="0" cellspacing="0">
         <tr>
             <td>ID</td>
-            <td>Наименование продуктов</td>
+            <td>Наименование продукта</td>
             <td>Цена</td>
-            <td>Действие</td>
+            <td></td>
         </tr>
         <tbody>
-        <tr ng-repeat="p in ProductsList">
+        <tr ng-repeat="p in ProductsPage.content">
             <td>{{p.id}}</td>
             <td>{{p.title}}</td>
+            <td>{{p.price}}</td>
             <td>
-                <button class="btn btn-secondary" ng-click="changePrice(p.id, -1)">-</button>
-                {{p.price}}
-                <button class="btn btn-secondary" ng-click="changePrice(p.id, 1)">+</button>
-            </td>
-            <td>
-                <button class="btn btn-danger" ng-click="deleteProduct(p.id)">Удалить</button>
+                <button class="btn btn-outline-warning" ng-click="addToCart(p.id)">Добавить в корзину</button>
             </td>
         </tr>
         </tbody>
     </table>
     <p></p>
 
-    <h4>Добавить новый продукт</h4>
-    <form novalidate ng-submit="createProduct()">
-        <input class="form-control" type="text" placeholder="Наименование продукта" ng-model="newProduct.title">
-        <input class="form-control" type="number" placeholder="Цена" ng-model="newProduct.price">
-        <p></p>
-        <button type="submit" class="btn btn-primary">Добавить</button>
-    </form>
+<!--    <h4>Добавить новый продукт</h4>-->
+<!--    <form novalidate ng-submit="createProduct()">-->
+<!--        <input class="form-control" type="text" placeholder="Наименование продукта" ng-model="newProduct.title">-->
+<!--        <input class="form-control" type="number" placeholder="Цена" ng-model="newProduct.price">-->
+<!--        <p></p>-->
+<!--        <button type="submit" class="btn btn-primary">Добавить</button>-->
+<!--    </form>-->
+
+    <h4>Корзина</h4>
+    <table class="table table-success table-striped" cellpadding="0" cellspacing="0">
+        <tr>
+<!--            <td>ID</td>-->
+            <td>Наименование продукта</td>
+            <td>Цена</td>
+            <td></td>
+        </tr>
+        <tbody>
+        <tr ng-repeat="c in CartList">
+<!--            <td>{{c.id}}</td>-->
+            <td>{{c.title}}</td>
+            <td>{{c.price}}</td>
+            <td>
+                <button class="btn btn-danger" ng-click="deleteFromCart(c.id)">Удалить из корзины</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
 </div>
 </body>

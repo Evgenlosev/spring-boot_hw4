@@ -1,17 +1,16 @@
 package com.geekbrains.spring.web.cart;
 
-import com.geekbrains.spring.web.entities.ProductDto;
+import com.geekbrains.spring.web.dto.ProductDto;
 import lombok.Data;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Component
-@Scope("prototype")
+@Scope("singleton")
 @Data
 public class Cart {
     private List<ProductDto> cartList;

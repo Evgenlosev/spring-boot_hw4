@@ -78,32 +78,27 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
     $scope.showCart = function () {
         $http.get(contextPath + '/carts')
             .then(function (response) {
-                $scope.CartList = response.data;
+                $scope.Cart = response.data;
             });
     };
 
     $scope.addToCart = function (productId) {
-        $http({
-            url: contextPath + '/carts/add',
-            method: 'GET',
-            params: {
-                id: productId
-            }
-        }).then(function (response) {
-//            console.log('id = ' + productId)
+        $http.get(contextPath + '/carts/add/' + productId)
+        .then(function (response) {
             $scope.showCart();
         });
     };
 
     $scope.deleteFromCart = function (productId) {
-        $http({
-            url: contextPath + '/carts/delete',
-            method: 'GET',
-            params: {
-                id: productId
-            }
-        }).then(function (response) {
-//            console.log('id = ' + productId)
+        $http.get(contextPath + '/carts/delete/' + productId)
+        .then(function (response) {
+            $scope.showCart();
+        });
+    };
+
+    $scope.clearCart = function () {
+        $http.get(contextPath + '/carts/clear')
+        .then(function (response) {
             $scope.showCart();
         });
     };
@@ -153,6 +148,13 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
                 alert('UNAUTHORIZED');
             });
     }
+
+    $scope.createOrder = function () {
+        $http.post('http://localhost:8189/app/api/v1/orders', $scope.Cart)
+            .then(function successCallback(response) {
+                alert('Создан заказ №' + response.data)
+            });
+    };
 
     $scope.showProducts();
     $scope.showCart();

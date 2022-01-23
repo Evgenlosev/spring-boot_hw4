@@ -46,7 +46,6 @@ public class ProductService {
     }
 
     public Product save(Product product) {
-        product.setCreationDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").format(new Date()));
         return productRepository.save(product);
     }
 

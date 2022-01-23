@@ -1,9 +1,11 @@
 package com.geekbrains.spring.web.services;
 
 import com.geekbrains.spring.web.dto.Cart;
+import com.geekbrains.spring.web.dto.OrderDetailsDto;
 import com.geekbrains.spring.web.dto.OrderItemDto;
 import com.geekbrains.spring.web.entities.Order;
 import com.geekbrains.spring.web.entities.OrderItem;
+import com.geekbrains.spring.web.entities.User;
 import com.geekbrains.spring.web.exceptions.ResourceNotFoundedException;
 import com.geekbrains.spring.web.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,32 +14,41 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final UserService userService;
-    private final OrderItemService orderItemService;
+    private final CartService cartService;
     private final ProductService productService;
 
     @Transactional
-    public Long createNewOrder(Cart cart, String userName) {
+    public void createOrder(User user, OrderDetailsDto orderDetailsDto) {
+        Cart currentCart = cartService.getCurrentCart();
         Order order = new Order();
-        order.setUser(userService.findByUsername(userName).orElseThrow(() -> new ResourceNotFoundedException(String.format("Пользователь с именем %s не найден", userName))));
-        order.setTotalPrice(cart.getTotalPrice());
+        order.setAddress(orderDetailsDto.getAddress());
+        order.setPhone(orderDetailsDto.getPhone());
+        order.setUser(user);
+        order.setTotalPrice(currentCart.getTotalPrice());
+        List<OrderItem> items = currentCart.getItems().stream()
+                .map(orderItemDto -> {
+                    OrderItem item = new OrderItem();
+                    item.setOrder(order);
+                    item.setQuantity(orderItemDto.getQuantity());
+                    item.setPricePerProduct(orderItemDto.getPricePerProduct());
+                    item.setPrice(orderItemDto.getPrice());
+                    item.setProduct(productService.findById(orderItemDto.getProductId()).orElseThrow(() -> new ResourceNotFoundedException("Product not found")));
+                    return item;
+                }).collect(Collectors.toList());
+        order.setOrderItems(items);
         orderRepository.save(order);
-        List<OrderItem> items = new ArrayList<>();
-        for (OrderItemDto o : cart.getItems()) {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setPricePerProduct(o.getPrice());
-            orderItem.setOrder(order);
-            orderItem.setProduct(productService.findById(o.getProductId()).orElseThrow(() -> new ResourceNotFoundedException("Продукт не найден")));
-            orderItem.setQuantity(o.getQuantity());
-            orderItem.setPrice(o.getQuantity() * o.getPricePerProduct());
-            items.add(orderItem);
-        }
-        order.setOrderItems(orderItemService.saveAll(items));
-        return order.getId();
+        currentCart.clear();
+
     }
+
+    public List<Order> findOrdersByUsername(String userName) {
+        return orderRepository.findAllByUsername(userName);
+    }
+
 }

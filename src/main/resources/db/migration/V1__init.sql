@@ -1,4 +1,11 @@
-create table if not exists products (id bigserial primary key, title varchar(255), price int, creation_date timestamp default systimestamp);
+create table if not exists products (
+    id          bigserial primary key,
+    title       varchar(255),
+    price       int not null,
+    created_at  timestamp default current_timestamp,
+    updated_at  timestamp default current_timestamp
+);
+
 insert into products (title, price) values
 ('Bread', 35),
 ('Milk', 60),
@@ -31,15 +38,17 @@ create table users (
 );
 
 create table roles (
-    id bigserial primary key,
-    name varchar(50) not null,
-    created_at timestamp default current_timestamp,
-    updated_at timestamp default current_timestamp
+    id          bigserial primary key,
+    name        varchar(50) not null,
+    created_at  timestamp default current_timestamp,
+    updated_at  timestamp default current_timestamp
 );
 
 create table users_roles (
     user_id bigint not null references users (id),
     role_id bigint not null references roles (id),
+    created_at  timestamp default current_timestamp,
+    updated_at  timestamp default current_timestamp,
     primary key (user_id, role_id)
 );
 
@@ -63,7 +72,9 @@ create table orders (
     user_id         bigint not null references users(id),
     total_price     int not null,
     address         varchar(255),
-    phone           varchar(255)
+    phone           varchar(255),
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp
 );
 
 create table order_items (
@@ -72,5 +83,13 @@ create table order_items (
     order_id                bigint not null references orders(id),
     quantity                int not null,
     price_per_product       int not null,
-    price                   int not null
+    price                   int not null,
+    created_at timestamp default current_timestamp,
+    updated_at timestamp default current_timestamp
 );
+
+insert into orders (user_id, total_price, address, phone) values
+(1, 120, 'address', '12345');
+
+insert into order_items (product_id, order_id, quantity, price_per_product, price) values
+(2, 1, 2, 60, 120);

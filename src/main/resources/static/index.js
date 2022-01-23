@@ -1,108 +1,40 @@
-angular.module('app', ['ngStorage']).controller('indexController', function ($scope, $rootScope, $http, $localStorage) {
-    const contextPath = 'http://localhost:8189/app/api/v1';
+(function () {
+    angular
+        .module('market-front', ['ngRoute', 'ngStorage'])
+        .config(config)
+        .run(run);
 
-    if ($localStorage.springWebUser) {
-        $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.springWebUser.token;
-    }
-
-    $scope.showProducts = function () {
-        $http({
-            url: contextPath + '/products',
-            method: 'GET',
-            params: {
-                title_part: $scope.filter ? $scope.filter.title_part : null,
-                min_price: $scope.filter ? $scope.filter.min_price : null,
-                max_price: $scope.filter ? $scope.filter.max_price : null
-            }
-        }).then(function (response) {
-            $scope.ProductsPage = response.data;
-        });
-    };
-
-    $scope.deleteProduct = function (productId) {
-        $http.delete(contextPath + '/products/' + productId)
-            .then(function (response) {
-                $scope.showProducts();
+    function config($routeProvider) {
+        $routeProvider
+            .when('/', {
+                templateUrl: 'welcome/welcome.html',
+                controller: 'welcomeController'
+            })
+            .when('/store', {
+                templateUrl: 'store/store.html',
+                controller: 'storeController'
+            })
+            .when('/cart', {
+                templateUrl: 'cart/cart.html',
+                controller: 'cartController'
+            })
+            .when('/orders', {
+                            templateUrl: 'orders/orders.html',
+                            controller: 'ordersController'
+                        })
+            .otherwise({
+                redirectTo: '/'
             });
     }
 
-
-    $scope.changePrice = function (productId, delta) {
-        $http({
-            url: contextPath + '/products/change_price',
-            method: 'GET',
-            params: {
-                productId: productId,
-                delta: delta
-            }
-        }).then(function (response) {
-            $scope.showProducts();
-        });
+    function run($rootScope, $http, $localStorage) {
+        if ($localStorage.springWebUser) {
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.springWebUser.token;
+        }
     }
+})();
 
-    $scope.filterProductList = function (min, max) {
-        $http({
-            url: contextPath + '/products/price_between',
-            method: 'GET',
-            params: {
-                min: min,
-                max: max
-            }
-        }).then(function (response) {
-            $scope.ProductsList = response.data;
-        });
-    }
-
-    $scope.reset = function () {
-        $http.get(contextPath + '/products')
-            .then(function (response) {
-                $scope.filter.title_part = null;
-                $scope.filter.min_price = null;
-                $scope.filter.max_price = null;
-                $scope.showProducts();
-
-            });
-    };
-
-    $scope.createProduct = function () {
-        $http.put(contextPath + '/products', $scope.newProduct)
-            .then(function (response) {
-                alert('Продукт ' + response.data.title + ' успешно добавлен')
-                $scope.showProducts();
-                $scope.newProduct.title = null;
-                $scope.newProduct.price = null;
-
-            });
-    };
-
-    $scope.showCart = function () {
-        $http.get(contextPath + '/carts')
-            .then(function (response) {
-                $scope.Cart = response.data;
-            });
-    };
-
-    $scope.addToCart = function (productId) {
-        $http.get(contextPath + '/carts/add/' + productId)
-        .then(function (response) {
-            $scope.showCart();
-        });
-    };
-
-    $scope.deleteFromCart = function (productId) {
-        $http.get(contextPath + '/carts/delete/' + productId)
-        .then(function (response) {
-            $scope.showCart();
-        });
-    };
-
-    $scope.clearCart = function () {
-        $http.get(contextPath + '/carts/clear')
-        .then(function (response) {
-            $scope.showCart();
-        });
-    };
-
+angular.module('market-front').controller('indexController', function ($rootScope, $scope, $http, $location, $localStorage) {
     $scope.tryToAuth = function () {
         $http.post('http://localhost:8189/app/auth', $scope.user)
             .then(function successCallback(response) {
@@ -112,6 +44,8 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
 
                     $scope.user.username = null;
                     $scope.user.password = null;
+
+                    $location.path('/');
                 }
             }, function errorCallback(response) {
             });
@@ -119,12 +53,8 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
 
     $scope.tryToLogout = function () {
         $scope.clearUser();
-        if ($scope.user.username) {
-            $scope.user.username = null;
-        }
-        if ($scope.user.password) {
-            $scope.user.password = null;
-        }
+        $scope.user = null;
+        $location.path('/');
     };
 
     $scope.clearUser = function () {
@@ -139,23 +69,4 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
             return false;
         }
     };
-
-    $scope.showCurrentUserInfo = function () {
-        $http.get('http://localhost:8189/app/api/v1/profile')
-            .then(function successCallback(response) {
-                alert('MY NAME IS: ' + response.data.username);
-            }, function errorCallback(response) {
-                alert('UNAUTHORIZED');
-            });
-    }
-
-    $scope.createOrder = function () {
-        $http.post('http://localhost:8189/app/api/v1/orders', $scope.Cart)
-            .then(function successCallback(response) {
-                alert('Создан заказ №' + response.data)
-            });
-    };
-
-    $scope.showProducts();
-    $scope.showCart();
 });

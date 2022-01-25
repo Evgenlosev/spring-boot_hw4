@@ -3,7 +3,7 @@ package com.geekbrains.spring.web.controllers;
 import com.geekbrains.spring.web.converters.ProductConverter;
 import com.geekbrains.spring.web.entities.Product;
 import com.geekbrains.spring.web.dto.ProductDto;
-import com.geekbrains.spring.web.exceptions.ResourceNotFoundedException;
+import com.geekbrains.spring.web.exceptions.ResourceNotFoundException;
 import com.geekbrains.spring.web.services.ProductService;
 import com.geekbrains.spring.web.validators.ProductValidator;
 import lombok.RequiredArgsConstructor;
@@ -24,18 +24,19 @@ public class ProductController {
             @RequestParam(name = "p", defaultValue = "1") Integer page,
             @RequestParam(name = "min_price", required = false) Integer minPrice,
             @RequestParam(name = "max_price", required = false) Integer maxPrice,
-            @RequestParam(name = "title_part", required = false) String titlePart
+            @RequestParam(name = "title_part", required = false) String titlePart,
+            @RequestParam(name = "category_title", required = false) String categoryTitle
     ) {
         if (page < 1) {
             page = 1;
         }
-        return productService.find(minPrice, maxPrice, titlePart, page).map(p -> productConverter.entityToDto(p));
+        return productService.find(minPrice, maxPrice, titlePart, categoryTitle, page).map(p -> productConverter.entityToDto(p));
     }
 
 
     @GetMapping("/{id}")
     public ProductDto getProductById(@PathVariable Long id) {
-        Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundedException("Product not found, id: " + id));
+        Product product = productService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found, id: " + id));
         return productConverter.entityToDto(product);
     }
 

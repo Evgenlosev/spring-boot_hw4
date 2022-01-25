@@ -2,7 +2,7 @@ package com.geekbrains.spring.web.services;
 
 import com.geekbrains.spring.web.entities.Product;
 import com.geekbrains.spring.web.dto.ProductDto;
-import com.geekbrains.spring.web.exceptions.ResourceNotFoundedException;
+import com.geekbrains.spring.web.exceptions.ResourceNotFoundException;
 import com.geekbrains.spring.web.repositories.ProductRepository;
 import com.geekbrains.spring.web.repositories.specifications.ProductsSpecifications;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +12,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -22,7 +20,7 @@ public class ProductService {
     private final ProductRepository productRepository;
 
 
-    public Page<Product> find(Integer minPrice, Integer maxPrice, String partTitle, Integer page) {
+    public Page<Product> find(Integer minPrice, Integer maxPrice, String partTitle, String categoryTitle, Integer page) {
         Specification<Product> spec = Specification.where(null);
         if (minPrice != null) {
             spec = spec.and(ProductsSpecifications.priceGreaterThanOrEqualsThan(minPrice));
@@ -32,6 +30,9 @@ public class ProductService {
         }
         if (partTitle != null) {
             spec = spec.and(ProductsSpecifications.titleLike(partTitle));
+        }
+        if (categoryTitle != null) {
+            spec = spec.and(ProductsSpecifications.categoryTitleIs(categoryTitle));
         }
         return productRepository.findAll(spec, PageRequest.of(page - 1, 10));
     }
@@ -51,7 +52,7 @@ public class ProductService {
 
     @Transactional
     public Product update(ProductDto productDto) {
-        Product product = productRepository.findById(productDto.getId()).orElseThrow(() -> new ResourceNotFoundedException("Невозможно обновить продукт, не найден в базе, id: " + productDto.getId()));
+        Product product = productRepository.findById(productDto.getId()).orElseThrow(() -> new ResourceNotFoundException("Невозможно обновить продукт, не найден в базе, id: " + productDto.getId()));
         product.setPrice(productDto.getPrice());
         product.setTitle(productDto.getTitle());
         return product;

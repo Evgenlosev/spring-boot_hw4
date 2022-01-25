@@ -4,7 +4,7 @@ import com.geekbrains.spring.web.converters.OrderConverter;
 import com.geekbrains.spring.web.dto.OrderDetailsDto;
 import com.geekbrains.spring.web.dto.OrderDto;
 import com.geekbrains.spring.web.entities.User;
-import com.geekbrains.spring.web.exceptions.ResourceNotFoundedException;
+import com.geekbrains.spring.web.exceptions.ResourceNotFoundException;
 import com.geekbrains.spring.web.services.OrderService;
 import com.geekbrains.spring.web.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class OrdersController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void createOrder (@RequestBody OrderDetailsDto orderDetailsDto, Principal principal) {
-        User user = userService.findByUsername(principal.getName()).orElseThrow(() -> new ResourceNotFoundedException("User not found"));
+        User user = userService.findByUsername(principal.getName()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         orderService.createOrder(user, orderDetailsDto);
     }
 

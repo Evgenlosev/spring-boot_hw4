@@ -2,17 +2,15 @@ package com.geekbrains.spring.web.services;
 
 import com.geekbrains.spring.web.dto.Cart;
 import com.geekbrains.spring.web.dto.OrderDetailsDto;
-import com.geekbrains.spring.web.dto.OrderItemDto;
 import com.geekbrains.spring.web.entities.Order;
 import com.geekbrains.spring.web.entities.OrderItem;
 import com.geekbrains.spring.web.entities.User;
-import com.geekbrains.spring.web.exceptions.ResourceNotFoundedException;
+import com.geekbrains.spring.web.exceptions.ResourceNotFoundException;
 import com.geekbrains.spring.web.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +23,8 @@ public class OrderService {
 
     @Transactional
     public void createOrder(User user, OrderDetailsDto orderDetailsDto) {
-        Cart currentCart = cartService.getCurrentCart();
+        String cartKey = cartService.getCartUuidFromSuffix(user.getUsername());
+        Cart currentCart = cartService.getCurrentCart(cartKey);
         Order order = new Order();
         order.setAddress(orderDetailsDto.getAddress());
         order.setPhone(orderDetailsDto.getPhone());
@@ -38,13 +37,12 @@ public class OrderService {
                     item.setQuantity(orderItemDto.getQuantity());
                     item.setPricePerProduct(orderItemDto.getPricePerProduct());
                     item.setPrice(orderItemDto.getPrice());
-                    item.setProduct(productService.findById(orderItemDto.getProductId()).orElseThrow(() -> new ResourceNotFoundedException("Product not found")));
+                    item.setProduct(productService.findById(orderItemDto.getProductId()).orElseThrow(() -> new ResourceNotFoundException("Product not found")));
                     return item;
                 }).collect(Collectors.toList());
         order.setOrderItems(items);
         orderRepository.save(order);
-        currentCart.clear();
-
+        cartService.clearCart(cartKey);
     }
 
     public List<Order> findOrdersByUsername(String userName) {

@@ -12,7 +12,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +59,23 @@ public class ProductService {
         product.setPrice(productDto.getPrice());
         product.setTitle(productDto.getTitle());
         return product;
+    }
+
+    //For SOAP
+    public static final Function<Product, com.geekbrains.spring.web.soap.products.Product> functionEntityToSoap = pe -> {
+        com.geekbrains.spring.web.soap.products.Product p = new com.geekbrains.spring.web.soap.products.Product();
+        p.setId(pe.getId());
+        p.setTitle(pe.getTitle());
+        p.setPrice(pe.getPrice());
+        return p;
+    };
+
+    public List<com.geekbrains.spring.web.soap.products.Product> getAllProducts() {
+        return productRepository.findAll().stream().map(functionEntityToSoap).collect(Collectors.toList());
+    }
+
+    public com.geekbrains.spring.web.soap.products.Product getById(Long id) {
+        return productRepository.findById(id).map(functionEntityToSoap).get();
     }
 }
 

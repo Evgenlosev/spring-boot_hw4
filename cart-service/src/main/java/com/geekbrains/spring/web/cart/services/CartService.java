@@ -1,8 +1,7 @@
-package com.geekbrains.spring.web.services;
+package com.geekbrains.spring.web.cart.services;
 
 import com.geekbrains.spring.web.auth.exceptions.ResourceNotFoundException;
-import com.geekbrains.spring.web.dto.Cart;
-import com.geekbrains.spring.web.entities.Product;
+import com.geekbrains.spring.web.cart.dto.Cart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;

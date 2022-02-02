@@ -1,11 +1,12 @@
-package com.geekbrains.spring.web.dto;
+package com.geekbrains.spring.web.cart.dto;
 
-import com.geekbrains.spring.web.entities.Product;
+import com.geekbrains.spring.web.auth.dto.OrderItemDto;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Data
 public class Cart {
@@ -27,13 +28,13 @@ public class Cart {
         return false;
     }
 
-    public void add(Product product) {
-        if (add(product.getId())) {
-            return;
-        }
-        items.add(new OrderItemDto(product));
-        recalculate();
-    }
+//    public void add(Product product) {
+//        if (add(product.getId())) {
+//            return;
+//        }
+//        items.add(new OrderItemDto(product));
+//        recalculate();
+//    }
 
     public void remove(Long productId) {
         items.removeIf(o -> o.getProductId().equals(productId));
@@ -55,7 +56,7 @@ public class Cart {
         }
     }
 
-    public void clear() {
+    public Consumer<Cart> clear() {
         items.clear();
         totalPrice = 0;
     }

@@ -1,5 +1,6 @@
 package com.geekbrains.spring.web.dto;
 
+import com.geekbrains.spring.web.auth.dto.OrderItemDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

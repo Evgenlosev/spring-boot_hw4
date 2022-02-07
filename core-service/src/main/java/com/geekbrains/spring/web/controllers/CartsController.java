@@ -3,7 +3,6 @@ package com.geekbrains.spring.web.controllers;
 import com.geekbrains.spring.web.auth.dto.StringResponse;
 import com.geekbrains.spring.web.dto.Cart;
 import com.geekbrains.spring.web.services.CartService;
-import com.geekbrains.spring.web.services.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CartsController {
     private final CartService cartService;
-    private final ProductService productService;
 
     @GetMapping("/{uuid}")
     public Cart getCart(@RequestHeader(required = false) String username, @PathVariable String uuid) {

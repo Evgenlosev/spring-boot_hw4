@@ -1,6 +1,6 @@
 package com.geekbrains.spring.web.validators;
 
-import com.geekbrains.spring.web.dto.ProductDto;
+import com.geekbrains.spring.web.api.core.ProductDto;
 import com.geekbrains.spring.web.exceptions.ValidationException;
 import org.springframework.stereotype.Component;
 

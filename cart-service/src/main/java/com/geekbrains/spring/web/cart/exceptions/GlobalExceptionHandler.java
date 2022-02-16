@@ -1,4 +1,4 @@
-package com.geekbrains.spring.web.exceptions;
+package com.geekbrains.spring.web.cart.exceptions;
 
 import com.geekbrains.spring.web.api.exceptions.AppError;
 import com.geekbrains.spring.web.api.exceptions.ResourceNotFoundException;
@@ -10,16 +10,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 @Slf4j
-public class GlobalExceptionsHandler {
+public class GlobalExceptionHandler {
     @ExceptionHandler
-    public ResponseEntity<AppError> catchResourceNotFoundException (ResourceNotFoundException e) {
+    public ResponseEntity<AppError> catchResourceNotFoundException(ResourceNotFoundException e) {
         log.error(e.getMessage(), e);
         return new ResponseEntity<>(new AppError(HttpStatus.NOT_FOUND.value(), e.getMessage()), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<FieldsValidationError> catchValidationException (ValidationException e) {
-        log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new FieldsValidationError(e.getErrorFieldsMessages()), HttpStatus.BAD_REQUEST);
     }
 }

@@ -1,7 +1,8 @@
 package com.geekbrains.spring.web.cart.controllers;
 
-import com.geekbrains.spring.web.auth.dto.StringResponse;
-import com.geekbrains.spring.web.cart.dto.Cart;
+import com.geekbrains.spring.web.api.carts.CartDto;
+import com.geekbrains.spring.web.api.dto.StringResponse;
+import com.geekbrains.spring.web.cart.converters.CartConverter;
 import com.geekbrains.spring.web.cart.services.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +13,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CartsController {
     private final CartService cartService;
+    private final CartConverter cartConverter;
 
     @GetMapping("/{uuid}")
-    public Cart getCart(@RequestHeader(required = false) String username, @PathVariable String uuid) {
-        return cartService.getCurrentCart(getCurrentCartUuid(username, uuid));
+    public CartDto getCart(@RequestHeader(required = false) String username, @PathVariable String uuid) {
+        return cartConverter.modelToDto(cartService.getCurrentCart(getCurrentCartUuid(username, uuid)));
     }
 
     @GetMapping("/generate")

@@ -2,7 +2,7 @@ package com.geekbrains.spring.web.auth.controllers;
 
 import com.geekbrains.spring.web.auth.dto.JwtRequest;
 import com.geekbrains.spring.web.auth.dto.JwtResponse;
-import com.geekbrains.spring.web.auth.exceptions.AppError;
+import com.geekbrains.spring.web.api.exceptions.AppError;
 import com.geekbrains.spring.web.auth.services.UserService;
 import com.geekbrains.spring.web.auth.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;

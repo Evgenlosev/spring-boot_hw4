@@ -1,10 +1,11 @@
 package com.geekbrains.spring.web.services;
 
-import com.geekbrains.spring.web.auth.exceptions.ResourceNotFoundException;
-import com.geekbrains.spring.web.dto.Cart;
-import com.geekbrains.spring.web.dto.OrderDetailsDto;
+import com.geekbrains.spring.web.api.carts.CartDto;
+import com.geekbrains.spring.web.api.core.OrderDetailsDto;
+import com.geekbrains.spring.web.api.exceptions.ResourceNotFoundException;
 import com.geekbrains.spring.web.entities.Order;
 import com.geekbrains.spring.web.entities.OrderItem;
+import com.geekbrains.spring.web.integrations.CartServiceIntegration;
 import com.geekbrains.spring.web.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final CartService cartService;
+    private final CartServiceIntegration cartServiceIntegration;
     private final ProductService productService;
 
     @Transactional
     public void createOrder(String username, OrderDetailsDto orderDetailsDto) {
-        String cartKey = cartService.getCartUuidFromSuffix(username);
-        Cart currentCart = cartService.getCurrentCart(cartKey);
+        CartDto currentCart = cartServiceIntegration.getUserCart(username);
         Order order = new Order();
         order.setAddress(orderDetailsDto.getAddress());
         order.setPhone(orderDetailsDto.getPhone());
@@ -41,7 +41,7 @@ public class OrderService {
                 }).collect(Collectors.toList());
         order.setOrderItems(items);
         orderRepository.save(order);
-        cartService.clearCart(cartKey);
+        cartServiceIntegration.clearUserCart(username);
     }
 
     public List<Order> findOrdersByUsername(String userName) {

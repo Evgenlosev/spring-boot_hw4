@@ -1,9 +1,9 @@
 package com.geekbrains.spring.web.auth.services;
 
+import com.geekbrains.spring.web.api.exceptions.UserAlreadyExistsException;
 import com.geekbrains.spring.web.auth.dto.UserRegistrationDto;
 import com.geekbrains.spring.web.auth.entities.Role;
 import com.geekbrains.spring.web.auth.entities.User;
-import com.geekbrains.spring.web.auth.exceptions.UserAlreadyExistsException;
 import com.geekbrains.spring.web.auth.repositories.RoleRepository;
 import com.geekbrains.spring.web.auth.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;

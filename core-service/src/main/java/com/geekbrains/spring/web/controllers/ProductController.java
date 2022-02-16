@@ -1,9 +1,9 @@
 package com.geekbrains.spring.web.controllers;
 
-import com.geekbrains.spring.web.auth.exceptions.ResourceNotFoundException;
+import com.geekbrains.spring.web.api.core.ProductDto;
+import com.geekbrains.spring.web.api.exceptions.ResourceNotFoundException;
 import com.geekbrains.spring.web.converters.ProductConverter;
 import com.geekbrains.spring.web.entities.Product;
-import com.geekbrains.spring.web.dto.ProductDto;
 import com.geekbrains.spring.web.services.ProductService;
 import com.geekbrains.spring.web.validators.ProductValidator;
 import lombok.RequiredArgsConstructor;
@@ -48,16 +48,15 @@ public class ProductController {
     @PutMapping
     public ProductDto updateProduct(@RequestBody ProductDto productDto) {
         productValidator.validate(productDto);
-        Product product = productService.update(productDto);
+        Product product = productConverter.dtoToEntity(productDto);
+        product = productService.save(product);
         return productConverter.entityToDto(product);
     }
 
     @PostMapping
     public ProductDto saveNewProduct(@RequestBody ProductDto productDto) {
         productValidator.validate(productDto);
-        Product product = productConverter.dtoToEntity(productDto);
-        product.setId(null);
-        product = productService.save(product);
+        Product product = productService.update(productDto);
         return productConverter.entityToDto(product);
     }
 

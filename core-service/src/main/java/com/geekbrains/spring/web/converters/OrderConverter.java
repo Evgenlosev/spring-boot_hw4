@@ -1,6 +1,6 @@
 package com.geekbrains.spring.web.converters;
 
-import com.geekbrains.spring.web.dto.OrderDto;
+import com.geekbrains.spring.web.api.core.OrderDto;
 import com.geekbrains.spring.web.entities.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -22,8 +22,8 @@ public class OrderConverter {
         out.setAddress(order.getAddress());
         out.setPhone(order.getPhone());
         out.setTotalPrice(order.getTotalPrice());
-        out.setUserName(order.getUsername());
-        out.setOrderItems(order.getOrderItems().stream().map(orderItemConverter::entityToDto).collect(Collectors.toList()));
+        out.setUsername(order.getUsername());
+        out.setItems(order.getOrderItems().stream().map(orderItemConverter::entityToDto).collect(Collectors.toList()));
         return out;
     }
 }

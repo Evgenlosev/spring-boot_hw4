@@ -2,6 +2,7 @@ package com.geekbrains.spring.web.controllers;
 
 import com.geekbrains.spring.web.api.core.OrderDetailsDto;
 import com.geekbrains.spring.web.api.core.OrderDto;
+import com.geekbrains.spring.web.api.exceptions.ResourceNotFoundException;
 import com.geekbrains.spring.web.converters.OrderConverter;
 import com.geekbrains.spring.web.services.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,4 +49,13 @@ public class OrdersController {
                 .map(orderConverter::entityToDto).collect(Collectors.toList());
     }
 
+    @GetMapping("/{id}")
+    public OrderDto getOrderById(@PathVariable Long id) {
+        return orderConverter.entityToDto(orderService.findById(id).orElseThrow(() -> new ResourceNotFoundException("ORDER 404")));
+    }
+
+    @GetMapping("cancel/{id}")
+    public OrderDto cancelOrderById(@PathVariable Long id) {
+        return orderConverter.entityToDto(orderService.cancelById(id));
+    }
 }

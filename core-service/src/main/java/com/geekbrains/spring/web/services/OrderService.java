@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +30,7 @@ public class OrderService {
         order.setPhone(orderDetailsDto.getPhone());
         order.setUsername(username);
         order.setTotalPrice(currentCart.getTotalPrice());
+        order.setStatus("created");
         List<OrderItem> items = currentCart.getItems().stream()
                 .map(orderItemDto -> {
                     OrderItem item = new OrderItem();
@@ -48,4 +50,19 @@ public class OrderService {
         return orderRepository.findAllByUsername(userName);
     }
 
+    public Optional<Order> findById(Long id) {
+        return orderRepository.findById(id);
+    }
+
+    public Order cancelById(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        order.setStatus("canceled");
+        return orderRepository.save(order);
+    }
+
+    public Order completeById(long id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        order.setStatus("completed");
+        return orderRepository.save(order);
+    }
 }

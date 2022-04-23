@@ -34,6 +34,9 @@ public class Order {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "status")
+    private String status;
+
     @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<OrderItem> orderItems;
 

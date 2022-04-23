@@ -46,14 +46,26 @@ insert into products (title, price, category_id) values
 ('Water', 25.00, 7),
 ('Coca-Cola', 80.00, 7);
 
+--create table adresses (
+--    id                  bigserial primary key,
+--    order_id            bigint not null references orders(id),
+--    country             varchar(50) not null,
+--    city                varchar(50) not null,
+--    street              varchar(50) not null,
+--    house_number        int not null,
+--    floor               int not null,
+--    apartment_number    int not null
+--);
+
 create table orders (
     id              bigserial primary key,
     username        varchar(255) not null,
     total_price     numeric(8, 2) not null,
     address         varchar(255),
     phone           varchar(255),
-    created_at timestamp default current_timestamp,
-    updated_at timestamp default current_timestamp
+    status          varchar(255) default 'created',
+    created_at      timestamp default current_timestamp,
+    updated_at      timestamp default current_timestamp
 );
 
 create table order_items (
@@ -63,8 +75,8 @@ create table order_items (
     quantity                int not null,
     price_per_product       numeric(8, 2) not null,
     price                   numeric(8, 2) not null,
-    created_at timestamp default current_timestamp,
-    updated_at timestamp default current_timestamp
+    created_at              timestamp default current_timestamp,
+    updated_at              timestamp default current_timestamp
 );
 
 insert into orders (username, total_price, address, phone) values

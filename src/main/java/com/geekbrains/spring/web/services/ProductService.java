@@ -1,7 +1,7 @@
 package com.geekbrains.spring.web.services;
 
 import com.geekbrains.spring.web.entities.Product;
-import com.geekbrains.spring.web.entities.ProductDto;
+import com.geekbrains.spring.web.dto.ProductDto;
 import com.geekbrains.spring.web.exceptions.ResourceNotFoundedException;
 import com.geekbrains.spring.web.repositories.ProductRepository;
 import com.geekbrains.spring.web.repositories.specifications.ProductsSpecifications;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service

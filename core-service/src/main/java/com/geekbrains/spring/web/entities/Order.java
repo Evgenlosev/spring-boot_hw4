@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,13 +26,16 @@ public class Order {
     private String username;
 
     @Column(name = "total_price")
-    private Integer totalPrice;
+    private BigDecimal totalPrice;
 
     @Column(name = "address")
     private String address;
 
     @Column(name = "phone")
     private String phone;
+
+    @Column(name = "status")
+    private String status;
 
     @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<OrderItem> orderItems;

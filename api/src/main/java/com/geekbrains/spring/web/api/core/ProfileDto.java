@@ -1,7 +1,10 @@
 package com.geekbrains.spring.web.api.core;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "Модель профиля пользователя")
 public class ProfileDto {
+    @Schema(description = "Имя пользователя", example = "user")
     private String username;
 
     public String getUsername() {

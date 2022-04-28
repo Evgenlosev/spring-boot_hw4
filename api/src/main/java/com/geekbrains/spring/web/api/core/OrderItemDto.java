@@ -1,11 +1,25 @@
 package com.geekbrains.spring.web.api.core;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.math.BigDecimal;
+
+@Schema(description = "Модель элемента заказа")
 public class OrderItemDto {
+    @Schema(description = "ID продукта", required = true, example = "1")
     private Long productId;
+
+    @Schema(description = "Название продукта", required = true, example = "Bread")
     private String productTitle;
+
+    @Schema(description = "Количество позиций продукта", required = true, example = "1")
     private int quantity;
-    private int pricePerProduct;
-    private int price;
+
+    @Schema(description = "Стоимость одной единицы продукта", required = true, example = "10.50")
+    private BigDecimal pricePerProduct;
+
+    @Schema(description = "Общая стоимость элемента заказа", required = true, example = "20")
+    private BigDecimal price;
 
     public Long getProductId() {
         return productId;
@@ -31,26 +45,26 @@ public class OrderItemDto {
         this.quantity = quantity;
     }
 
-    public int getPricePerProduct() {
+    public BigDecimal getPricePerProduct() {
         return pricePerProduct;
     }
 
-    public void setPricePerProduct(int pricePerProduct) {
+    public void setPricePerProduct(BigDecimal pricePerProduct) {
         this.pricePerProduct = pricePerProduct;
     }
 
-    public int getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
     public OrderItemDto() {
     }
 
-    public OrderItemDto(Long productId, String productTitle, int quantity, int pricePerProduct, int price) {
+    public OrderItemDto(Long productId, String productTitle, int quantity, BigDecimal pricePerProduct, BigDecimal price) {
         this.productId = productId;
         this.productTitle = productTitle;
         this.quantity = quantity;

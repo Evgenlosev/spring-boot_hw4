@@ -5,12 +5,18 @@
             <td>ID</td>
             <td>Адрес доставки</td>
             <td>Стоимость</td>
+            <td>Статус</td>
         </tr>
         <tbody>
         <tr ng-repeat="order in MyOrders">
             <td>{{order.id}}</td>
             <td>{{order.address}}</td>
             <td>{{order.totalPrice}}</td>
+            <td>{{order.status}}</td>
+            <td>
+                <button class="btn btn-primary" ng-click="goToPay(order.id)" ng-show="order.status == 'created'" >Оплатить</button>
+<!--                <button class="btn btn-primary" ng-click="checkOut()" ng-show="isUserLoggedIn() && cart.items.length > 0">Оформить заказ</button>-->
+            </td>
         </tr>
         </tbody>
     </table>

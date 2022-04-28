@@ -4,6 +4,8 @@ import com.geekbrains.spring.web.entities.Category;
 import com.geekbrains.spring.web.entities.Product;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Locale;
+
 public class ProductsSpecifications {
     public static Specification<Product> priceGreaterThanOrEqualsThan(Integer price) {
         return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("price"), price);

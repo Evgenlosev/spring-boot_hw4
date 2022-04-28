@@ -1,11 +1,18 @@
 package com.geekbrains.spring.web.services;
 
 import com.geekbrains.spring.web.entities.Product;
+import com.geekbrains.spring.web.entities.ProductDto;
 import com.geekbrains.spring.web.exceptions.ResourceNotFoundedException;
 import com.geekbrains.spring.web.repositories.ProductRepository;
+import com.geekbrains.spring.web.repositories.specifications.ProductsSpecifications;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +22,20 @@ public class ProductService {
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
+    }
+
+    public Page<Product> find(Integer minPrice, Integer maxPrice, String partTitle, Integer page) {
+        Specification<Product> spec = Specification.where(null);
+        if (minPrice != null) {
+            spec = spec.and(ProductsSpecifications.priceGreaterThanOrEqualsThan(minPrice));
+        }
+        if (maxPrice != null) {
+            spec = spec.and(ProductsSpecifications.priceLessThanOrEqualsThan(maxPrice));
+        }
+        if (partTitle != null) {
+            spec = spec.and(ProductsSpecifications.titleLike(partTitle));
+        }
+        return productRepository.findAll(spec, PageRequest.of(page - 1, 5));
     }
 
     public List<Product> findAll() {
@@ -48,8 +69,10 @@ public class ProductService {
         return productRepository.findAllByPriceLess(max);
     }
 
-    public void saveAndFlush(Product p) {
-        productRepository.saveAndFlush(p);
+    public ProductDto saveAndFlush(ProductDto productDto) {
+        Product product = new Product(productDto.getTitle(), productDto.getPrice());
+        product.setCreationDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS").format(new Date()));
+        return new ProductDto(productRepository.saveAndFlush(product));
     }
 }
 
